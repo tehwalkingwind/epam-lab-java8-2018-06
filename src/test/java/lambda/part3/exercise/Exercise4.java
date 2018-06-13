@@ -20,9 +20,9 @@ public class Exercise4 {
     private static class LazyCollectionHelper<T, R> {
 
         private List<T> source;
-        private Function<T, R> mapFunction;
+        private Function<List<T>, List<R>> mapFunction;
 
-        private LazyCollectionHelper (List<T> list, Function<T, R> function) {
+        private LazyCollectionHelper (List<T> list, Function<List<T>, List<R>> function) {
             this.source = Lists.newArrayList(list);
             this.mapFunction = function;
         }
@@ -32,17 +32,20 @@ public class Exercise4 {
         }
 
         public <U> LazyCollectionHelper<T, U> flatMap(Function<R, List<U>> flatMapping) {
-            return new LazyCollectionHelper(source, mapFunction.andThen(flatMapping));
+            Function<List<R>, List<U>> flatFunction = list -> {
+                List<U> result = new ArrayList<>();
+                list.forEach(r -> result.addAll(flatMapping.apply(r)));
+                return result;
+            };
+            return new LazyCollectionHelper(source, mapFunction.andThen(flatFunction));
         }
 
         public <U> LazyCollectionHelper<T, U> map(Function<R, U> mapping) {
-            return new LazyCollectionHelper(source, mapFunction.andThen(mapping));
+            return flatMap(t -> Collections.singletonList(mapping.apply(t)));
         }
 
         public List<R> force() {
-            List<R> result = Lists.newArrayList();
-            source.forEach(t -> result.add(mapFunction.apply(t)));
-            return result;
+            return Lists.newArrayList(mapFunction.apply(source));
         }
     }
 
@@ -52,13 +55,8 @@ public class Exercise4 {
 
         List<Integer> codes = LazyCollectionHelper.from(employees)
                 .flatMap(Employee::getJobHistory)
-                .map(h -> h.getPosition())
-                .flatMap(s -> {
-                    static List<Character> characters =
-                    for (char c : s.toCharArray()) {
-
-                    }
-                })
+                .map(JobHistoryEntry::getPosition)
+                .flatMap(Lists::charactersOf)
                 .map(c -> (int) c)
                 .force();
         assertEquals(calcCodes("dev", "dev", "tester", "dev", "dev", "QA", "QA", "dev", "tester", "tester", "QA", "QA", "QA", "dev"), codes);
