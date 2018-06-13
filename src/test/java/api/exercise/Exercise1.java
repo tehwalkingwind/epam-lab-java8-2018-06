@@ -70,9 +70,9 @@ public class Exercise1 {
 
         // TODO реализация
 
-        Status alexStatus = null;
-        Status ivanStatus = null;
-        Status helenStatus = null;
+        Status alexStatus = candidates.getOrDefault(alex, Status.UNKNOWN);
+        Status ivanStatus = candidates.getOrDefault(ivan, Status.UNKNOWN);
+        Status helenStatus = candidates.getOrDefault(helen, Status.UNKNOWN);
 
         assertEquals(Status.PENDING, alexStatus);
         assertEquals(Status.PENDING, ivanStatus);
