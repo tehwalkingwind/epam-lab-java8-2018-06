@@ -4,8 +4,9 @@ import lambda.data.Person;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,7 +52,13 @@ public class Exercise1 {
         candidates.put(new Person("b", "c", 16), Status.PENDING);
         candidates.put(new Person("b", "c", 5), Status.PENDING);
 
-        // TODO реализация
+        Set<Person> keys = new HashSet<>(candidates.keySet());
+        keys.stream()
+                .filter(p -> p.getAge() <= 21)
+                .forEach(candidates::remove);
+
+        candidates.keySet().forEach(p -> candidates.put(p, Status.ACCEPTED));
+
 
         Map<Person, Status> expected = new HashMap<>();
         expected.put(ivan, Status.ACCEPTED);
@@ -67,8 +74,6 @@ public class Exercise1 {
         Map<Person, Status> candidates = new HashMap<>();
         candidates.put(alex, Status.PENDING);
         candidates.put(ivan, Status.PENDING);
-
-        // TODO реализация
 
         Status alexStatus = candidates.getOrDefault(alex, Status.UNKNOWN);
         Status ivanStatus = candidates.getOrDefault(ivan, Status.UNKNOWN);
@@ -94,7 +99,8 @@ public class Exercise1 {
         newValues.put(alex, Status.DECLINED);
         newValues.put(helen, Status.PENDING);
 
-        // TODO реализация
+        Set<Person> keys = new HashSet<>(oldValues.keySet());
+        keys.forEach(p -> newValues.putIfAbsent(p, oldValues.get(p)));
 
         assertEquals(Status.DECLINED, newValues.get(alex));
         assertEquals(Status.ACCEPTED, newValues.get(ivan));
