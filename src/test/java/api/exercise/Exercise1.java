@@ -52,12 +52,8 @@ public class Exercise1 {
         candidates.put(new Person("b", "c", 16), Status.PENDING);
         candidates.put(new Person("b", "c", 5), Status.PENDING);
 
-        Set<Person> keys = new HashSet<>(candidates.keySet());
-        keys.stream()
-                .filter(p -> p.getAge() <= 21)
-                .forEach(candidates::remove);
-
-        candidates.keySet().forEach(p -> candidates.put(p, Status.ACCEPTED));
+        candidates.keySet().removeIf(p -> p.getAge() <= 21);
+        candidates.replaceAll((p, s) -> Status.ACCEPTED);
 
 
         Map<Person, Status> expected = new HashMap<>();
@@ -99,8 +95,7 @@ public class Exercise1 {
         newValues.put(alex, Status.DECLINED);
         newValues.put(helen, Status.PENDING);
 
-        Set<Person> keys = new HashSet<>(oldValues.keySet());
-        keys.forEach(p -> newValues.putIfAbsent(p, oldValues.get(p)));
+        oldValues.forEach((p, s) -> newValues.putIfAbsent(p, s));
 
         assertEquals(Status.DECLINED, newValues.get(alex));
         assertEquals(Status.ACCEPTED, newValues.get(ivan));
