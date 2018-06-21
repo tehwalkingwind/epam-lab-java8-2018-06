@@ -47,7 +47,11 @@ public class Exercise2 {
      * @see <a href="https://habr.com/company/epam_systems/blog/247805">Сканирование</a>
      */
     private static <T> T[] sequentialPrefix(T[] source, BinaryOperator<T> operator) {
-        throw new UnsupportedOperationException();
+        T[] result = source.clone();
+        for (int i = 1; i < source.length; i++) {
+            result[i] = operator.apply(result[i], result[i - 1]);
+        }
+        return result;
     }
 
     @Test
@@ -76,7 +80,8 @@ public class Exercise2 {
      * @throws IllegalArgumentException Если {@code value <= 0}
      */
     private static int log2(int value) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+        if (value <= 0) throw new IllegalArgumentException();
+        return 0;
     }
 
     @Test
@@ -107,6 +112,7 @@ public class Exercise2 {
      * @throws IllegalArgumentException Если {@code base < 0} или {@code degree < 0}
      */
     private static int pow(int base, int degree) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+        if (base < 0 || degree < 0) throw new IllegalArgumentException("Argument must be positive");
+        return (int) Math.pow(base, degree);
     }
 }
