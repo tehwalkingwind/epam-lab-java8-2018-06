@@ -80,8 +80,8 @@ public class Exercise2 {
      * @throws IllegalArgumentException Если {@code value <= 0}
      */
     private static int log2(int value) throws IllegalArgumentException {
-        if (value <= 0) throw new IllegalArgumentException();
-        return 0;
+        if (value <= 0) throw new IllegalArgumentException("Value must be positive");
+        return (int) (Math.log(value) / Math.log(2));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class Exercise2 {
      * @throws IllegalArgumentException Если {@code base < 0} или {@code degree < 0}
      */
     private static int pow(int base, int degree) throws IllegalArgumentException {
-        if (base < 0 || degree < 0) throw new IllegalArgumentException("Argument must be positive");
+        if (base < 0 || degree < 0) throw new IllegalArgumentException("Argument must be non-negative");
         return (int) Math.pow(base, degree);
     }
 }
